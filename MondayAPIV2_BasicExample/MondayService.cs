@@ -72,7 +72,7 @@ namespace MondayAPIV2_BasicExample
         /// <summary>
         /// Get a board by ID, with item details
         /// </summary>
-        public Board GetBoardWithItems(int boardId)
+        public Board GetBoardWithItems(string boardId)
         {
             string query = "{ \"query\": \"" + @"{ boards(ids: " + boardId + ") { name items { id name column_values { id value title } } } }" + "\" }";
             string response = GetResponseData(query);
@@ -85,9 +85,16 @@ namespace MondayAPIV2_BasicExample
             return boards[0];
         }
 
+        public dynamic CreateTextColumnValue(string boardId, string itemName)
+        {
+            string query = "{\"query\" : \"mutation { create_item(board_id:"+boardId+ ",group_id:\\\"topics\\\",item_name: \\\"" + itemName + "\\\") ,  { id } }\"}";
 
+            string response = GetResponseData(query);
+            dynamic data = ParseGraphQLResponse(response, "");
+            return data;
+        }
 
-        public dynamic ChangeTextColumnValue(int boardId, int itemId, string columnId, string columnValue)
+        public dynamic ChangeTextColumnValue(string boardId, string itemId, string columnId, string columnValue)
         {
             string value = @"\\\""" + columnValue + @"\\\""";
             string query = "{\"query\" : \"mutation { change_column_value(board_id: " + boardId + ", item_id: " + itemId + " , column_id: \\\"" + columnId + "\\\", value: \\\"" + value + "\\\") { id } }\"}";

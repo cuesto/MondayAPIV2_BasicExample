@@ -6,7 +6,7 @@ namespace MondayV2API_BasicExample.MondayEntities
     public class Item
     {
         [JsonProperty(PropertyName = "id")]
-        public int Id { get; set; }
+        public string Id { get; set; }
 
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }

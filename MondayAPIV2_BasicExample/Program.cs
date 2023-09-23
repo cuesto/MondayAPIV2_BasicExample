@@ -9,7 +9,7 @@ namespace MondayAPIV2_BasicExample
     {
         static void Main(string[] args)
         {
-            string apiToken = "YOUR TOKEN HERE";
+            string apiToken = "";
             string apiRoot = "https://api.monday.com/v2/";
             
             // using statement used here to dispose of the client (but it's recommended to reuse HttpClient as much as possible in a real situation)
@@ -19,9 +19,11 @@ namespace MondayAPIV2_BasicExample
                 var service = new MondayService(client);
 
                 // get all boards
-                List<Board> boards = service.GetBoards();
+                List<Board> boards = (List<Board>)service.GetBoards().Where(x => x.Id == "5140759834").ToList();
                 Console.WriteLine("-- Boards --");
                 boards.ForEach(x => Console.WriteLine($"Board: {x.Name}"));
+
+                //boards = boards.Where(x=>x.Id == "5140759834").ToList();
 
                 if (boards.Any())
                 {
@@ -35,8 +37,16 @@ namespace MondayAPIV2_BasicExample
 
                     // update a column value with mutation
                     Console.WriteLine($"\n-- Changing a column value --");
-                    var columnChange = service.ChangeTextColumnValue(boards[0].Id, board.Items[0].Id, "text3", "hello world!");
-                    Console.WriteLine($"The response body was: {columnChange}");
+                    //var itemCreated = service.CreateTextColumnValue(boards[0].Id, "B0023");
+                    //var itemId = itemCreated["create_item"]["id"].Value;
+                    var itemId = "5211344191";
+
+                    //var columnChange0 = service.ChangeTextColumnValue(boards[0].Id, itemId , "numbers","1049");
+                    //var columnChange1 = service.ChangeTextColumnValue(boards[0].Id, itemId, "date4", "2022-07-21T12:00:00.000Z");
+                    
+                    var columnChange1 = service.ChangeTextColumnValue(boards[0].Id, itemId, "connect_boards", "{\\\"changed_at\\\":\"2023-09-11T16:28:54.741Z\",\"linkedPulseIds\":[{\"linkedPulseId\":4912847929}]}");
+
+                    Console.WriteLine($"The response body was: {columnChange1}");
                 }
             }
             Console.Read();
